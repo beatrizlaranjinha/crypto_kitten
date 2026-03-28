@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use solana_program::hash::hash;
+use solana_sha256_hasher::hash;
 //Importar a framework
 
 declare_id!("EzMSo5rEQjNAKwkFpuLRJ5Hna3JVruA55mnGMBiZv6wq"); // endereço da blockchain
