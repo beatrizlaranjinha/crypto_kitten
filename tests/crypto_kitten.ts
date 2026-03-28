@@ -26,5 +26,6 @@ describe("crypto_kitten", () => {
     console.log("Cat owner:", catData.owner.toBase58());
     console.log("Cat name:", catData.name);
     console.log("Cat level:", catData.level);
+    console.log("Cat DNA:", catData.dna.toString());
   });
 });
