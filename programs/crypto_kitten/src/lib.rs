@@ -23,6 +23,7 @@ pub mod crypto_kitten {
         cat.name = name.clone(); //guardar o nome
         cat.level = 1; //nivel inicial
         cat.dna = dna;
+        cat.bump = ctx.bumps.cat_account;
 
         emit!(CatCreated {
             owner: ctx.accounts.user.key(),
@@ -62,19 +63,21 @@ pub struct CatCreated {
 }
 
 #[derive(Accounts)]
+#[instruction(name: String)]
 pub struct CreateCat<'info> {
-    //conta do gato
     #[account(
-        init, //cria uma nova account
-        payer = user, //quem paga é o utilizador
-        space = 8 + Cat::INIT_SPACE //quanto espaço vai ocupar
+        init,
+        seeds = [b"cat", name.as_bytes()],
+        bump,
+        payer = user,
+        space = 8 + Cat::INIT_SPACE
     )]
     pub cat_account: Account<'info, Cat>,
 
     #[account(mut)]
-    pub user: Signer<'info>, //quem esta a chamar a função tem de assinar a transação , é a wallet
+    pub user: Signer<'info>,
 
-    pub system_program: Program<'info, System>, //para criar accounts na blockchain
+    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
@@ -96,6 +99,7 @@ pub struct Cat {
     pub name: String, //maximo de 50 caracteres
     pub level: u8,     //nivel
     pub dna: u64,
+    pub bump: u8,
 }
 
 #[error_code]
