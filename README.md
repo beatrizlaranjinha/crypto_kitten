@@ -7,7 +7,7 @@
 </pre>
 
 
-Crypto Kitten is a smart contract built on Solana using the Anchor framework.  
+`Crypto Kitten` is a smart contract built on Solana using the Anchor framework.  
 It allows users to create and manage virtual cats stored on-chain.
 
 Each cat has:
