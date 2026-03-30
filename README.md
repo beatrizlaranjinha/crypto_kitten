@@ -1,6 +1,10 @@
 
     
-<pre> ``` |\__/,| (`\ _.|o o |_ ) ) -(((---(((-------- ``` </pre>
+<pre>
+   |\__/,|   (`\
+  _.|o o  |_   ) )
+-(((---(((--------
+</pre>
 
 
 Crypto Kitten is a smart contract built on Solana using the Anchor framework.  
