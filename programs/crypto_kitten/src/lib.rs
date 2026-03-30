@@ -17,7 +17,7 @@ pub mod crypto_kitten {
     // ctx contém tudo a que a função precisa : accounts , wallet e sistema
     pub fn create_cat(ctx: Context<CreateCat>, name: String) -> Result<()> {
         let cat = &mut ctx.accounts.cat_account; //aceder a conta onde o gato é guardado
-        let dna = _generate_random_dna(&name); //gerar DNA automaticamente a partir do nome
+        let dna = _generate_dna_from_name(&name); //gerar DNA automaticamente a partir do nome
 
         cat.owner = ctx.accounts.user.key(); //guardar o dono
         cat.name = name.clone(); //guardar o nome
@@ -42,7 +42,7 @@ pub mod crypto_kitten {
 }
 
 //função privada
-fn _generate_random_dna(name: &str) -> u64 {
+fn _generate_dna_from_name(name: &str) -> u64 {
     let hash_result = hash(name.as_bytes());
     let bytes = hash_result.to_bytes();
 
