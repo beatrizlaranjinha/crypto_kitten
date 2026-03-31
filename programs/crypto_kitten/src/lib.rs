@@ -15,26 +15,26 @@ pub struct CreateCat<'info> {
     //conta do gato
     #[account(
         init, //cria uma nova account
-        seeds = [b"cat", name.as_bytes()],
-        bump,
+        seeds = [b"cat", name.as_bytes()], //usar o nome como seed
+        bump, //ajusta para garantir que não faz parte da curva ed...blahblahbah
         payer = user, //quem paga é o utilizador
-        space = 8 + Cat::INIT_SPACE //quanto espaço vai ocupar
+        space = 8 + Cat::INIT_SPACE //quanto espaço vai ocupar -> a blockchain precisa de saber com antecedencia
     )]
-    pub cat_account: Account<'info, Cat>,
+    pub cat_account: Account<'info, Cat>, //o info é uma referencia para as contas (ensures that account information remains valid while being processed)
 
     #[account(mut)]
     pub user: Signer<'info>, //quem esta a chamar a função tem de assinar a transação , é a wallet
 
-    pub system_program: Program<'info, System>, //para criar accounts na blockchain
+    pub system_program: Program<'info, System>, //para criar accounts na blockchain //system pertence ao anchor e mostra que a conta é segura e válida
 }
 
 #[derive(Accounts)]
 pub struct LevelUpCat<'info> {
     #[account(mut)]
-    pub cat_account: Account<'info, Cat>,
+    pub cat_account: Account<'info, Cat>, //conta onde o gato esta guardado
 
     #[account(mut)]
-    pub user: Signer<'info>,
+    pub user: Signer<'info>, //o utlizador chama a função e tem de assinar a transação
 }
 
 #[derive(Accounts)]
@@ -59,14 +59,14 @@ pub struct Cat {
     #[max_len(50)]
     pub name: String, //maximo de 50 caracteres
     pub level: u8,     //nivel
-    pub dna: u64,
-    pub bump: u8,
+    pub dna: u64,      //o dna é u64 porque queremos guardar como um numero e não como hash
+    pub bump: u8,      //é preciso guardar o bump porque precisamos dele para voltar a fazer o pda
 }
 
-#[event]
+#[event] //emitir as formações dos logs na block chain ("It logs “a cat was created with this owner, name and DNA”")
 pub struct CatCreated {
-    pub owner: Pubkey,
-    pub name: String,
+    pub owner: Pubkey, //endreço da wallet que criou o gato
+    pub name: String,  //nome do kitten
     pub dna: u64,
 }
 
@@ -94,9 +94,10 @@ pub mod crypto_kitten {
         cat.name = name.clone(); //guardar o nome
         cat.level = 1; //nivel inicial
         cat.dna = dna;
-        cat.bump = ctx.bumps.cat_account;
+        cat.bump = ctx.bumps.cat_account; //Guarda o bump da pda do gato para poder recriar e validar esta conta no futuro
 
         emit!(CatCreated {
+            //chama para ser apresentado no frontend
             owner: ctx.accounts.user.key(),
             name,
             dna,
@@ -107,7 +108,7 @@ pub mod crypto_kitten {
 
     //função para o gato subir de nivel
     pub fn level_up_cat(ctx: Context<LevelUpCat>) -> Result<()> {
-        let cat = &mut ctx.accounts.cat_account;
+        let cat = &mut ctx.accounts.cat_account; //obtem a conta do gato e permite muda la
         require_keys_eq!(cat.owner, ctx.accounts.user.key(), CustomError::NotOwner); //verifica se quem esta a chamar é o dono
         cat.level += 1; //aumenta de nivel
         Ok(())
@@ -122,14 +123,16 @@ pub mod crypto_kitten {
         let price = BASE_PRICE * cat.level as u64; //quanto maior o nivel, maior o preço
 
         let cpi_context = CpiContext::new(
-            ctx.accounts.system_program.to_account_info(),
+            //cross program invocation -> para chamar outro programa
+            ctx.accounts.system_program.to_account_info(), //passa a referencia para o system program , o system program é quem faz a transferencia de SOL
             anchor_lang::system_program::Transfer {
-                from: ctx.accounts.buyer.to_account_info(),
-                to: ctx.accounts.seller.to_account_info(),
+                //Dados da transferencia
+                from: ctx.accounts.buyer.to_account_info(), //de onde sai o dinheiro
+                to: ctx.accounts.seller.to_account_info(),  //para onde vai o dinheiro
             },
-        ); //contexto para a transferência de SOL
+        );
 
-        anchor_lang::system_program::transfer(cpi_context, price)?; //transferir SOL do buyer para o seller
+        anchor_lang::system_program::transfer(cpi_context, price)?; //chama o system program e transfere sol de forma segura , anchor_lanf fornece ferramentas para interagir com a solana de forma simples
 
         cat.owner = ctx.accounts.buyer.key(); //mudar o dono do gato
 
@@ -139,13 +142,14 @@ pub mod crypto_kitten {
 
 //função privada
 fn _generate_dna_from_name(name: &str) -> u64 {
-    let hash_result = hash(name.as_bytes());
-    let bytes = hash_result.to_bytes();
+    //u64 pq é guardado como numero
+    let hash_result = hash(name.as_bytes()); //gera um hash a partir do nome
+    let bytes = hash_result.to_bytes(); //este hash passa para um array bytes
 
-    let mut first_eight = [0u8; 8];
-    first_eight.copy_from_slice(&bytes[..8]); //Usa só os 8 bytes
+    let mut first_eight = [0u8; 8]; //cria um array de 8 bytes (tamanho de um u64)
+    first_eight.copy_from_slice(&bytes[..8]); //copia os 1os 8tes do hash
 
-    let number = u64::from_le_bytes(first_eight);
+    let number = u64::from_le_bytes(first_eight); //converte esses8 num numero u64
     number % DNA_MODULUS //garante no max. 16 digits
                          //mimi -> hash -> numero -> DNA(16DIGITS)
 }
