@@ -17,7 +17,7 @@ async function main() {
   ) as Program<CryptoKitten>;
 
   // nome do gato que vamos comprar
-  const name = "Mimi";
+  const name = "fibonacciiiii";
 
   // calcular a PDA do gato a partir do nome
   const [catPda] = PublicKey.findProgramAddressSync(

@@ -1,4 +1,3 @@
-// importar bibliotecas necessárias (Anchor e Solana)
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
@@ -18,7 +17,7 @@ async function main() {
   ) as Program<CryptoKitten>;
 
   // nome do gato a criar
-  const name = "fibonaccii";
+  const name = "fibonacciiiii";
 
   // calcular a PDA do gato a partir do nome
   const [catPda] = PublicKey.findProgramAddressSync(
