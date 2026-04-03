@@ -8,9 +8,12 @@ skip-lint = false
 [programs.localnet]
 crypto_kitten = "DYRqYYqzCTXk6ihmAjSpK2PmoHhLfgEWGCZrNNCiNf3L"
 
+[programs.devnet]
+crypto_kitten = "DYRqYYqzCTXk6ihmAjSpK2PmoHhLfgEWGCZrNNCiNf3L"
+
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"

@@ -2,8 +2,7 @@ use anchor_lang::prelude::*;
 use solana_sha256_hasher::hash;
 //Importar a framework
 
-declare_id!("DYRqYYqzCTXk6ihmAjSpK2PmoHhLfgEWGCZrNNCiNf3L"); // endereço da blockchain
-
+declare_id!("DYRqYYqzCTXk6ihmAjSpK2PmoHhLfgEWGCZrNNCiNf3L");
 const DNA_DIGITS: u64 = 16; //valor fixo de dna
 const DNA_MODULUS: u64 = 10u64.pow(DNA_DIGITS as u32); //delimitar os 16 digitos random % 10^16
 const BASE_PRICE: u64 = 1_000_000_000; //preço base do gato
