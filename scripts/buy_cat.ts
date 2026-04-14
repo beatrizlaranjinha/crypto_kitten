@@ -1,8 +1,9 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { PublicKey, Keypair } from "@solana/web3.js";
+import { PublicKey, Keypair } from "@solana/web3.js"; //ler o conteudo (contem a private key)
 import idl from "../target/idl/crypto_kitten.json";
 import { CryptoKitten } from "../target/types/crypto_kitten";
+import fs from "fs";
 
 // função principal
 async function main() {
@@ -17,7 +18,7 @@ async function main() {
   ) as Program<CryptoKitten>;
 
   // nome do gato que vamos comprar
-  const name = "fibonacciiiii";
+  const name = "grace hopper";
 
   // calcular a PDA do gato a partir do nome
   const [catPda] = PublicKey.findProgramAddressSync(
@@ -25,16 +26,21 @@ async function main() {
     program.programId
   );
 
-  // criar um novo utilizador (buyer)
-  const buyer = Keypair.generate();
+  // escolher o buyer
+  const secret = JSON.parse(fs.readFileSync("other.json", "utf-8")); // depois do JSON.parse ,ficamos com um array de números (bytes da private key)
+
+  // cria uma Keypair (wallet completa: public + private)
+  // Uint8Array → formato que a biblioteca da Solana espera
+
+  const buyer = Keypair.fromSecretKey(new Uint8Array(secret)); // agora o buyer já pode ASSINAR transações (tem private key)
 
   // dar SOL ao buyer para ele poder comprar
-  console.log("Airdropping SOL to buyer...");
+  /*console.log("Airdropping SOL to buyer...");
   const sig = await provider.connection.requestAirdrop(
     buyer.publicKey,
-    1_000_000_000
+    1_000_000_000 //// pedir SOL para essa wallet (senão não consegue comprar)
   );
-  await provider.connection.confirmTransaction(sig);
+  await provider.connection.confirmTransaction(sig); */
 
   // chamar a função buy_cat do programa
   console.log("Buying cat...");

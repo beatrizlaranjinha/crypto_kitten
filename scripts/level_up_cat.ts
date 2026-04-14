@@ -19,7 +19,7 @@ async function main() {
 
   // endereço do gato que queremos dar level up
   const catAddress = new PublicKey(
-    "98u8byKU6pRysXgCw3B38iKPfMH4ERiyLaQqqECAx9vv"
+    "5CPhRzCEaJ9JdNdBTNYHyWRQKa5UCJAcDDuJwWXCqnu4"
   );
 
   // chamar a função level_up_cat do programa
