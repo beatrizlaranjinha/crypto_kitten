@@ -10,7 +10,6 @@ It allows users to create, upgrade and trade virtual cats stored on-chain.
 ---
 
 Features
-
 Create a cat with unique DNA
 Level up your cat (only owner)
 Buy cats from other users
@@ -23,6 +22,6 @@ Ownership enforced on-chain
 
  How to Run
 
-### 1. Start local validator
+## 1. Start local validator
 ```bash
 solana-test-validator
