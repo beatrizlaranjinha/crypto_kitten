@@ -8,14 +8,6 @@
 It allows users to create, upgrade and trade virtual cats stored on-chain.
 
 
-Features
-
-Create a cat with unique DNA
-Level up your cat (only owner)
-Buy cats from other users
-Ownership enforced on-chain
-
-
 - Cats are stored as **PDAs (Program Derived Accounts)**
 - DNA is generated deterministically from the cat name
 - Price increases with level:
